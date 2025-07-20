@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AOSInit from "@/components/AOSInit";
 
 export const metadata: Metadata = {
   title: "IoT Innovators",
@@ -16,10 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased min-h-screen flex flex-col" suppressHydrationWarning>
-        <AOSInit /> {/* 👈 Mount AOS */}
+      <body className="antialiased min-h-screen bg-white" suppressHydrationWarning>
         <Header />
-        <main className="flex-grow">
+        <main>
           {children}
         </main>
         <Footer />

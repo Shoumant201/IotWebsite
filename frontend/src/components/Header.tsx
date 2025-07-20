@@ -1,37 +1,70 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHomePage = pathname === '/' || pathname === '/home';
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Events', href: '/events' },
-    { name: 'Timeline', href: '/timeline' },
-    { name: 'Team', href: '/team' },
-    { name: 'Contact Us', href: '/contact' },
+    { name: 'Home', href: '/', section: 'home' },
+    { name: 'About Us', href: '/about', section: 'about-us' },
+    { name: 'Events', href: '/events', section: 'about' },
+    { name: 'Timeline', href: '/timeline', section: 'timeline' },
+    { name: 'Team', href: '/team', section: 'team' },
+    { name: 'Contact Us', href: '/contact', section: 'contact' },
   ];
 
+  const handleNavClick = (e: React.MouseEvent, item: typeof navigation[0]) => {
+    if (isHomePage && item.section) {
+      e.preventDefault();
+      const targetElement = document.getElementById(item.section);
+      if (targetElement) {
+        const headerOffset = item.name === 'Home' ? 0 : 100; // No offset for home section
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+    setIsMenuOpen(false);
+  };
+
   return (
-    <header className="bg-transparent py-3 fixed top-0 left-0 right-0 z-50">
+    <header 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        zIndex: 50,
+        backgroundColor: 'transparent',
+        paddingTop: '0.75rem',
+        paddingBottom: '0.75rem'
+      }}
+    >
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo - Farthest Left (Near Screen Border) */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
-                <img 
-                  src="/DevCorp.png" 
-                  alt="DevCorp" 
+                <img
+                  src="/DevCorp.png"
+                  alt="DevCorp"
                   className="h-10 w-auto"
                 />
                 <div className="w-px h-8 bg-gray-400"></div>
-                <img 
-                  src="/iot.png" 
-                  alt="IoT" 
+                <img
+                  src="/iot.png"
+                  alt="IoT"
                   className="h-10 w-auto"
                 />
               </div>
@@ -46,6 +79,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
                   className="text-gray-700 bg-transparent border-transparent hover:text-gray-900 hover:bg-[#75BF43]/40 hover:border-[#75BF43]/60 px-5 py-3 text-sm font-medium transition-all duration-200 rounded-full border"
                 >
                   {item.name}
@@ -95,8 +129,8 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
+                  onClick={(e) => handleNavClick(e, item)}
                   className="text-gray-700 hover:text-white hover:bg-[#75BF43] block px-4 py-2 text-base font-medium transition-all duration-200 rounded-full"
-                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>

@@ -40,7 +40,7 @@ export default function Home() {
     };
 
     // Make navigation function globally available
-    (window as any).handleNavClick = handleNavClick;
+    (window as unknown as { handleNavClick: (targetId: string) => void }).handleNavClick = handleNavClick;
 
     // Counter animation with delay to ensure DOM is ready
     const initCounters = () => {
@@ -64,7 +64,7 @@ export default function Home() {
             let count = 0;
             const duration = 4000; // 4 seconds for slower animation
             const increment = target / (duration / 16); // 60fps animation
-            let animationId: number;
+            // let animationId: number;
 
             // Reset counter to 0 when it comes into view
             counter.textContent = '0';
@@ -90,7 +90,7 @@ export default function Home() {
                   displayText = Math.floor(count) + '+';
                 }
                 counter.textContent = displayText;
-                animationId = requestAnimationFrame(updateCount);
+                requestAnimationFrame(updateCount);
               }
             };
 
@@ -157,7 +157,7 @@ export default function Home() {
 
             {/* Main Heading - Ignite IoT Innovation Together */}
             <h1 className="text-2xl sm:text-2xl md:text-2xl font-bold text-black leading-tight mb-8" data-aos="fade-down" data-aos-delay="200">
-              "Ignite IoT Innovation Together"
+              &quot;Ignite IoT Innovation Together&quot;
             </h1>
 
             {/* Quote */}
@@ -215,8 +215,8 @@ export default function Home() {
 
             {/* Main Heading */}
             <h1 className="text-3xl md:text-6xl font-bold mb-4" data-aos="fade-up" data-aos-delay="200">
-              "Know About "<br />
-              "IoT Innovators Foundation"
+              &quot;Know About &quot;<br />
+              &quot;IoT Innovators Foundation&quot;
             </h1>
 
             {/* Description */}

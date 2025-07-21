@@ -145,15 +145,15 @@ export default function TeamSection() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
             {leadershipTeam.map((leader, index) => (
               <div 
                 key={index}
-                className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 hover:shadow-xl transition-all duration-300 hover:scale-105" 
+                className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 md:p-8 hover:shadow-xl transition-all duration-300 hover:scale-105" 
                 data-aos="fade-up" 
                 data-aos-delay={100 * (index + 1)}
               >
-                <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden bg-gradient-to-br from-[#75BF43] to-[#5a9f33] flex items-center justify-center">
+                <div className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-4 md:mb-6 rounded-full overflow-hidden bg-gradient-to-br from-[#75BF43] to-[#5a9f33] flex items-center justify-center">
                   {leader.image ? (
                     <img
                       src={leader.image}
@@ -165,23 +165,23 @@ export default function TeamSection() {
                         target.style.display = 'none';
                         const parent = target.parentElement;
                         if (parent) {
-                          parent.innerHTML = `<span class="text-white text-3xl font-bold">${leader.name.split(' ').map((n: string) => n[0]).join('')}</span>`;
+                          parent.innerHTML = `<span class="text-white text-2xl md:text-3xl font-bold">${leader.name.split(' ').map((n: string) => n[0]).join('')}</span>`;
                         }
                       }}
                     />
                   ) : (
-                    <span className="text-white text-3xl font-bold">
+                    <span className="text-white text-2xl md:text-3xl font-bold">
                       {leader.name.split(' ').map(n => n[0]).join('')}
                     </span>
                   )}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 text-center mb-2">{leader.name}</h3>
-                <p className="text-[#75BF43] text-center mb-2 font-semibold">{leader.role}</p>
-                <p className="text-gray-500 text-center mb-4 text-sm">{leader.department}</p>
-                <p className="text-gray-600 text-sm text-center mb-6 leading-relaxed">{leader.description}</p>
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 text-center mb-2">{leader.name}</h3>
+                <p className="text-[#75BF43] text-center mb-2 font-semibold text-sm md:text-base">{leader.role}</p>
+                <p className="text-gray-500 text-center mb-3 md:mb-4 text-xs md:text-sm">{leader.department}</p>
+                <p className="text-gray-600 text-xs md:text-sm text-center mb-4 md:mb-6 leading-relaxed">{leader.description}</p>
                 <div className="flex justify-center">
-                  <a href="#" className="bg-[#0A66C2] hover:bg-[#004182] text-white p-3 rounded-lg transition-colors duration-200">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <a href="#" className="bg-[#0A66C2] hover:bg-[#004182] text-white p-2 md:p-3 rounded-lg transition-colors duration-200 min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                     </svg>
                   </a>
@@ -202,8 +202,8 @@ export default function TeamSection() {
             </p>
           </div>
 
-          {/* Auto-scrolling Steering Leaders */}
-          <div className="relative">
+          {/* Desktop Auto-scrolling Steering Leaders */}
+          <div className="relative hidden md:block">
             <div
               ref={scrollRef}
               className="flex gap-6 overflow-x-hidden scroll-smooth"
@@ -240,6 +240,47 @@ export default function TeamSection() {
                   <h4 className="text-lg font-bold text-gray-900 text-center mb-2">{leader.name}</h4>
                   <p className="text-[#75BF43] text-center mb-1 font-semibold text-sm">{leader.role}</p>
                   <p className="text-gray-500 text-center mb-3 text-xs">{leader.department}</p>
+                  <p className="text-gray-600 text-xs text-center leading-relaxed">{leader.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile Grid Layout for Steering Leaders */}
+          <div className="md:hidden">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
+              {steeringLeaders.map((leader, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4 hover:shadow-xl transition-all duration-300"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden bg-gradient-to-br from-[#75BF43] to-[#5a9f33] flex items-center justify-center">
+                    {leader.image ? (
+                      <img
+                        src={leader.image}
+                        alt={leader.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to initials if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `<span class="text-white text-sm font-bold">${leader.name.split(' ').map((n: string) => n[0]).join('')}</span>`;
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span className="text-white text-sm font-bold">
+                        {leader.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="text-base font-bold text-gray-900 text-center mb-1">{leader.name}</h4>
+                  <p className="text-[#75BF43] text-center mb-1 font-semibold text-xs">{leader.role}</p>
+                  <p className="text-gray-500 text-center mb-2 text-xs">{leader.department}</p>
                   <p className="text-gray-600 text-xs text-center leading-relaxed">{leader.description}</p>
                 </div>
               ))}

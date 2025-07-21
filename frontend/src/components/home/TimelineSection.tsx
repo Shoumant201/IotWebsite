@@ -56,8 +56,8 @@ export default function TimelineSection() {
           </p>
         </div>
 
-        {/* Timeline Container */}
-        <div className="relative">
+        {/* Desktop Timeline Container */}
+        <div className="relative hidden md:block">
           {/* Vertical Line */}
           <div className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-[#75BF43] to-[#5a9f33] h-full"></div>
 
@@ -96,15 +96,15 @@ export default function TimelineSection() {
         </div>
 
         {/* Mobile Timeline for smaller screens */}
-        <div className="md:hidden mt-16">
-          <div className="space-y-8">
+        <div className="md:hidden">
+          <div className="space-y-6">
             {timelineEvents.map((event, index) => (
               <div key={index} className="flex items-start space-x-4" data-aos="fade-up" data-aos-delay={index * 100}>
-                <div className="w-4 h-4 bg-[#75BF43] rounded-full mt-2 flex-shrink-0"></div>
-                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200 flex-1">
+                <div className={`w-4 h-4 bg-[#75BF43] rounded-full mt-2 flex-shrink-0 ${event.isFuture ? 'animate-pulse' : ''}`}></div>
+                <div className={`bg-white p-4 rounded-xl shadow-lg border border-gray-200 flex-1 ${event.isFuture ? 'bg-gradient-to-br from-[#75BF43]/5 to-[#5a9f33]/5 border-[#75BF43]/20' : ''}`}>
                   <h3 className="text-lg font-bold text-[#75BF43] mb-1">{event.year}</h3>
-                  <h4 className="text-md font-semibold text-gray-900 mb-2">{event.title}</h4>
-                  <p className="text-gray-600 text-sm">{event.description}</p>
+                  <h4 className="text-base font-semibold text-gray-900 mb-2">{event.title}</h4>
+                  <p className="text-gray-600 text-sm leading-relaxed">{event.description}</p>
                 </div>
               </div>
             ))}

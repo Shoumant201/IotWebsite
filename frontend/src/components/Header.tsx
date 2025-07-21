@@ -64,18 +64,18 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           {/* Logo - Farthest Left (Near Screen Border) */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <img
                   src="/DevCorp.png"
                   alt="DevCorp"
-                  className="h-10 w-auto"
+                  className="h-8 sm:h-10 w-auto flex-shrink-0"
                 />
-                <div className="w-px h-8 bg-gray-400"></div>
+                <div className="w-px h-6 sm:h-8 bg-gray-400 flex-shrink-0"></div>
                 <img
                   src="/iot.png"
                   alt="IoT"
-                  className="h-10 w-auto"
+                  className="h-8 sm:h-10 w-auto flex-shrink-0"
                 />
               </div>
               {/* <span className="text-xl font-bold text-gray-900">IoT Innovators</span> */}

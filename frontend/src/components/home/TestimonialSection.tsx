@@ -156,8 +156,8 @@ export default function TestimonialSection() {
                     </p>
                 </div>
 
-                {/* Auto-scrolling Testimonials Container */}
-                <div className="relative">
+                {/* Desktop Auto-scrolling Testimonials Container */}
+                <div className="relative hidden md:block">
                     {/* Auto-scrolling Testimonials */}
                     <div
                         ref={scrollRef}
@@ -198,20 +198,59 @@ export default function TestimonialSection() {
                             </div>
                         ))}
                     </div>
-
-
                 </div>
 
-                {/* Testimonial Indicators - Clickable Dots */}
-                <div className="flex justify-center gap-3 mt-8">
+                {/* Mobile Static Grid Layout */}
+                <div className="md:hidden">
+                    <div className="grid grid-cols-1 gap-6 max-w-lg mx-auto">
+                        {testimonials.slice(0, 3).map((testimonial, index) => (
+                            <div
+                                key={index}
+                                className="bg-white rounded-2xl shadow-lg border border-gray-200 p-4"
+                                data-aos="fade-up"
+                                data-aos-delay={index * 100}
+                            >
+                                {/* Quote Icon */}
+                                <div className="mb-3">
+                                    <svg className="w-6 h-6 text-[#75BF43] opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
+                                    </svg>
+                                </div>
+
+                                {/* Testimonial Content */}
+                                <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                                    "{testimonial.content}"
+                                </p>
+
+                                {/* Author Info */}
+                                <div className="flex items-center">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-[#75BF43] to-[#5a9f33] rounded-full flex items-center justify-center mr-3">
+                                        <span className="text-white text-sm font-bold">
+                                            {testimonial.name.split(' ').map(n => n[0]).join('')}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-gray-900 text-sm">{testimonial.name}</h4>
+                                        <p className="text-[#75BF43] text-xs font-medium">{testimonial.role}</p>
+                                        <p className="text-gray-500 text-xs">{testimonial.company}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Testimonial Indicators - Clickable Dots (Desktop Only) */}
+                <div className="hidden md:flex justify-center gap-3 mt-8">
                     {testimonials.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => scrollToTestimonial(index)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#75BF43]/50 ${index === currentIndex
+                            className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[#75BF43]/50 min-h-[44px] min-w-[44px] flex items-center justify-center ${index === currentIndex
                                     ? 'bg-[#75BF43] scale-125 shadow-lg'
                                     : 'bg-gray-300 hover:bg-[#75BF43]/60'
                                 }`}
+                            style={{ touchAction: 'manipulation' }}
                             aria-label={`Go to testimonial ${index + 1}`}
                         />
                     ))}
@@ -222,10 +261,11 @@ export default function TestimonialSection() {
                     <p className="text-gray-600 mb-6">Ready to start your IoT journey?</p>
                     <a
                         href="/apply"
-                        className="inline-flex items-center bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform shadow-[0_10px_30px_rgba(117,191,67,0.3)]"
+                        className="inline-flex items-center bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] active:scale-95 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold text-base md:text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform shadow-[0_10px_30px_rgba(117,191,67,0.3)] min-h-[44px]"
+                        style={{ touchAction: 'manipulation' }}
                     >
                         Join Our Program
-                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                     </a>

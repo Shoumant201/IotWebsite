@@ -11,16 +11,6 @@ export default function ContactButtons() {
       >
         Get In Touch
       </a>
-      <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-transparent bg-gradient-to-b from-gray-100 to-gray-200 border border-gray-300 text-gray-900 px-5 py-3 rounded-full font-normal cursor-pointer text-[12px] md:text-[14px] hover:shadow-lg transition-all duration-200"
-        data-aos="fade-left"
-        data-aos-delay="200"
-      >
-        Visit Our Website
-      </a>
     </section>
   );
 }

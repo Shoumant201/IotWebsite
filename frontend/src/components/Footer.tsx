@@ -1,15 +1,51 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/' || pathname === '/home';
+
   const quickLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'About Us', href: '/about' },
-    { name: 'Events', href: '/events' },
-    { name: 'Team', href: '/team' },
-    { name: 'Contact Us', href: '/contact' },
+    { name: 'Home', href: '/', section: 'home' },
+    { name: 'About Us', href: '/', section: 'about-us' },
+    { name: 'Events', href: '/', section: 'about' },
+    { name: 'Timeline', href: '/', section: 'timeline' },
+    { name: 'Team', href: '/', section: 'team' },
+    { name: 'Testimonials', href: '/', section: 'testimonials' },
+    { name: 'Contact Us', href: '/contact', section: null },
   ];
+
+  const handleNavClick = (e: React.MouseEvent, item: typeof quickLinks[0]) => {
+    // Handle Contact Us separately (goes to dedicated page)
+    if (item.name === 'Contact Us') {
+      return; // Let the default link behavior handle this
+    }
+
+    // For all other items with sections, navigate to home page and scroll to section
+    if (item.section) {
+      e.preventDefault();
+      
+      if (isHomePage) {
+        // If already on home page, just scroll to section
+        const targetElement = document.getElementById(item.section);
+        if (targetElement) {
+          const headerOffset = item.name === 'Home' ? 0 : 100;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      } else {
+        // If on another page, navigate to home page with hash
+        window.location.href = `/#${item.section}`;
+      }
+    }
+  };
 
   const socialLinks = [
     {
@@ -89,9 +125,10 @@ export default function Footer() {
                 <li key={link.name}>
                   <Link
                     href={link.href}
+                    onClick={(e) => handleNavClick(e, link)}
                     className="text-gray-400 hover:text-white transition-colors duration-200 text-sm flex items-center group"
                   >
-                    <span className="w-0 group-hover:w-2 h-0.5 bg-blue-500 transition-all duration-200 mr-0 group-hover:mr-2"></span>
+                    <span className="w-0 group-hover:w-2 h-0.5 bg-[#75BF43] transition-all duration-200 mr-0 group-hover:mr-2"></span>
                     {link.name}
                   </Link>
                 </li>

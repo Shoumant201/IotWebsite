@@ -22,7 +22,7 @@ export default function FounderProfile() {
 
         {/* Social Link */}
         <a
-          href="#"
+          href="https://www.linkedin.com/in/naresh-sejwal/"
           target="_blank"
           rel="noopener noreferrer"
           className="h-8 md:h-12 w-8 md:w-12 aspect-square rounded-xl overflow-hidden flex items-center justify-center relative bg-[#0A66C2] hover:bg-[#004182] hover:shadow-lg transition-all duration-200"

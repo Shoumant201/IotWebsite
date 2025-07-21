@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -29,7 +29,7 @@ export default function Header() {
     // For all other items with sections, navigate to home page and scroll to section
     if (item.section) {
       e.preventDefault();
-      
+
       if (isHomePage) {
         // If already on home page, just scroll to section
         const targetElement = document.getElementById(item.section);
@@ -52,17 +52,12 @@ export default function Header() {
   };
 
   return (
-    <header 
+    <header
+      className="fixed top-0 left-0 right-0 w-full z-50 pt-3 pb-3"
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        width: '100%',
-        zIndex: 50,
-        backgroundColor: 'transparent',
-        paddingTop: '0.75rem',
-        paddingBottom: '0.75rem'
+        background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 50%, rgba(255, 255, 255, 0.1) 100%)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)'
       }}
     >
       <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -89,13 +84,13 @@ export default function Header() {
 
           {/* Center Navigation with Translucent Background */}
           <nav className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2">
-            <div className="flex space-x-1 bg-[#75BF43]/20 backdrop-blur-sm rounded-full px-3 py-2">
+            <div className="flex space-x-1 bg-[#75BF43]/20 backdrop-blur-md rounded-full px-3 py-2 shadow-sm border border-white/10">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
-                  className="text-gray-700 bg-transparent border-transparent hover:text-gray-900 hover:bg-[#75BF43]/40 hover:border-[#75BF43]/60 px-5 py-3 text-sm font-medium transition-all duration-200 rounded-full border"
+                  className="text-gray-700 bg-transparent border-transparent hover:text-white hover:bg-[#75BF43]/60 hover:border-[#75BF43]/80 hover:shadow-md hover:scale-105 px-5 py-3 text-sm font-medium transition-all duration-300 ease-in-out rounded-full border"
                 >
                   {item.name}
                 </Link>
@@ -116,36 +111,38 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu button - Optimized for Android */}
           <div className="lg:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-[#75BF43] focus:outline-none focus:text-[#75BF43] p-2"
+              className="text-gray-700 hover:text-[#75BF43] focus:outline-none focus:text-[#75BF43] p-3 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg active:bg-gray-100 transition-colors duration-150"
               aria-label="Toggle menu"
+              style={{ touchAction: 'manipulation' }}
             >
               {isMenuOpen ? (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Optimized for Android */}
         {isMenuOpen && (
           <div className="lg:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-2 bg-white border-t border-gray-200">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md border-t border-gray-200 rounded-b-2xl shadow-lg">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item)}
-                  className="text-gray-700 hover:text-white hover:bg-[#75BF43] block px-4 py-2 text-base font-medium transition-all duration-200 rounded-full"
+                  className="text-gray-700 hover:text-white hover:bg-[#75BF43] active:bg-[#5a9f33] block px-4 py-3 text-base font-medium transition-all duration-150 rounded-xl min-h-[44px] flex items-center"
+                  style={{ touchAction: 'manipulation' }}
                 >
                   {item.name}
                 </Link>
@@ -153,9 +150,10 @@ export default function Header() {
               {/* Mobile Apply Now Button */}
               <Link
                 href="/apply"
-                className="text-white font-semibold px-4 py-2 rounded-full text-base transition-all duration-200 block text-center mt-4"
+                className="text-white font-semibold px-4 py-3 rounded-xl text-base transition-all duration-150 block text-center mt-3 min-h-[44px] flex items-center justify-center active:scale-95"
                 style={{
-                  background: 'linear-gradient(90deg, rgba(117, 191, 67, 1) 28%, rgba(90, 191, 67, 1) 84%)'
+                  background: 'linear-gradient(90deg, rgba(117, 191, 67, 1) 28%, rgba(90, 191, 67, 1) 84%)',
+                  touchAction: 'manipulation'
                 }}
                 onClick={() => setIsMenuOpen(false)}
               >

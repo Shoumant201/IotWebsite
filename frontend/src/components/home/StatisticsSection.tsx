@@ -3,11 +3,11 @@ import StatisticsClient from './StatisticsClient'
 import { useEffect } from 'react';
 
 const statistics = [
-  { target: 500, label: "Students Enrolled" },
-  { target: 50, label: "IoT Projects" },
-  { target: 25, label: "Industry Partners" },
-  { target: 10, label: "Countries Reached" },
-  { target: 2000, label: "LinkedIn Followers" },
+  { target: 50, label: "Members" },
+  { target: 20, label: "IoT Projects" },
+  { target: 15, label: "Events" },
+  { target: 3, label: "Years" },
+  { target: 25, label: "Testimonials" },
   { target: 100, label: "Successful Deployments" },
 ];
 

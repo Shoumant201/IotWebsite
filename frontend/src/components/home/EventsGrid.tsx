@@ -3,32 +3,42 @@ import Image from 'next/image';
 const events = [
   {
     image: "/FaceinFocus.png",
-    title: "IoT Workshop 2024",
+    title: "Face in Focus",
     description: "Hands-on learning experience"
   },
   {
     image: "/IOT_Tech_Hunt.png",
-    title: "Tech Conference 2024",
+    title: "IoT Tech Hunt",
     description: "Exploring the future of IoT"
   },
   {
     image: "/IOTOPENDOORS.png",
-    title: "IoT Hackathon",
+    title: "IoT Open Doors",
     description: "48-hour innovation challenge"
   },
   {
     image: "/Talent_Acquisition_Techathon.png",
-    title: "Industry Networking",
+    title: "Talent Acquisition Techathon",
     description: "Connect with IoT professionals"
   },
   {
-    image: "/Group.jpg",
-    title: "Product Showcase",
+    image: "/Talent_Acquisition_Techathon.png",
+    title: "Tech Connect",
+    description: "Connect with IoT professionals"
+  },
+  {
+    image: "/3D Buzz.png",
+    title: "3D Buzz",
     description: "Demonstrating IoT innovations"
   },
   {
-    image: "/Group-XAj550kD.png",
-    title: "IoT Development Workshop",
+    image: "/Shot Circuit.png",
+    title: "Short Circuit",
+    description: "Learn to build IoT solutions"
+  },
+  {
+    image: "/Echo Bot.png",
+    title: "Echo Bot",
     description: "Learn to build IoT solutions"
   }
 ];

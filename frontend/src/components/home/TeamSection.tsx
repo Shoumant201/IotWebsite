@@ -8,14 +8,14 @@ const leadershipTeam = [
     name: "Dipesh Shrestha",
     role: "DevCorp Head",
     department: "Herald College Kathmandu",
-    image: "/team/devCorp-head.jpg",
+    image: "/team/Dipesh_Shrestha.png",
     description: "Leading strategic development initiatives and fostering innovation partnerships across the IoT ecosystem."
   },
   {
     name: "Subash Bista",
     role: "Academic Mentor",
     department: "Herald College Kathmandu",
-    image: "/team/academic-mentor.jpg",
+    image: "/team/Subash_Bista.png",
     description: "Guiding academic excellence and research initiatives in IoT education and student development."
   }
 ];
@@ -23,36 +23,43 @@ const leadershipTeam = [
 // Steering leaders data
 const steeringLeaders = [
   {
-    name: "Amit Thapa",
-    role: "Technical Lead",
+    name: "Bidhan Sapkota",
+    role: "Executive Lead",
     department: "Engineering Department",
-    image: "/team/technical-lead.jpg",
+    image: "/team/Bidhan.jpg",
     description: "Overseeing technical architecture and IoT system implementations."
   },
   {
-    name: "Priya Gurung",
-    role: "Research Director",
+    name: "Bibisha Sapkota",
+    role: "Event Planning Lead",
     department: "Research & Development",
-    image: "/team/research-director.jpg",
+    image: "/team/Bibisha_sapkota.jpg",
     description: "Leading cutting-edge research in IoT technologies and innovation."
   },
   {
-    name: "Bikash Shrestha",
-    role: "Operations Manager",
+    name: "Shoumant Khadka",
+    role: "Development Lead",
     department: "Operations Department",
-    image: "/team/operations-manager.jpg",
+    image: "/team/ShoumantKhadka.png",
     description: "Managing day-to-day operations and ensuring smooth project execution."
   },
   {
-    name: "Sita Maharjan",
-    role: "Community Lead",
+    name: "Luniva Shrestha",
+    role: "Design Lead",
     department: "Community Relations",
-    image: "/team/community-lead.jpg",
+    image: "/team/LunivaShrestha.jpg",
     description: "Building and nurturing the IoT community and stakeholder relationships."
   },
   {
-    name: "Nabin Karki",
-    role: "Innovation Head",
+    name: "Jyoti Karnjit",
+    role: "Marketing Lead",
+    department: "Innovation Lab",
+    image: "/team/Jyoti_Karanjit.png",
+    description: "Driving innovation initiatives and emerging technology adoption."
+  },
+  {
+    name: "Narendra Ghimire",
+    role: "Documentation Head",
     department: "Innovation Lab",
     image: "/team/innovation-head.jpg",
     description: "Driving innovation initiatives and emerging technology adoption."
@@ -147,9 +154,26 @@ export default function TeamSection() {
                 data-aos-delay={100 * (index + 1)}
               >
                 <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden bg-gradient-to-br from-[#75BF43] to-[#5a9f33] flex items-center justify-center">
-                  <span className="text-white text-3xl font-bold">
-                    {leader.name.split(' ').map(n => n[0]).join('')}
-                  </span>
+                  {leader.image ? (
+                    <img
+                      src={leader.image}
+                      alt={leader.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback to initials if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `<span class="text-white text-3xl font-bold">${leader.name.split(' ').map((n: string) => n[0]).join('')}</span>`;
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span className="text-white text-3xl font-bold">
+                      {leader.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 text-center mb-2">{leader.name}</h3>
                 <p className="text-[#75BF43] text-center mb-2 font-semibold">{leader.role}</p>
@@ -192,9 +216,26 @@ export default function TeamSection() {
                   className="flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-all duration-300 hover:scale-105"
                 >
                   <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-gradient-to-br from-[#75BF43] to-[#5a9f33] flex items-center justify-center">
-                    <span className="text-white text-lg font-bold">
-                      {leader.name.split(' ').map(n => n[0]).join('')}
-                    </span>
+                    {leader.image ? (
+                      <img
+                        src={leader.image}
+                        alt={leader.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to initials if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `<span class="text-white text-lg font-bold">${leader.name.split(' ').map((n: string) => n[0]).join('')}</span>`;
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span className="text-white text-lg font-bold">
+                        {leader.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    )}
                   </div>
                   <h4 className="text-lg font-bold text-gray-900 text-center mb-2">{leader.name}</h4>
                   <p className="text-[#75BF43] text-center mb-1 font-semibold text-sm">{leader.role}</p>
@@ -212,7 +253,7 @@ export default function TeamSection() {
             href="/team"
             className="inline-flex items-center bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform shadow-[0_10px_30px_rgba(117,191,67,0.3)]"
           >
-            View All Team Members
+            All Members
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>

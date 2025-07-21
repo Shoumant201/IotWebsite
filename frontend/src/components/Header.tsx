@@ -11,26 +11,41 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/', section: 'home' },
-    { name: 'About Us', href: '/about', section: 'about-us' },
-    { name: 'Events', href: '/events', section: 'about' },
-    { name: 'Timeline', href: '/timeline', section: 'timeline' },
-    { name: 'Team', href: '/team', section: 'team' },
-    { name: 'Contact Us', href: '/contact', section: 'contact' },
+    { name: 'About Us', href: '/', section: 'about-us' },
+    { name: 'Events', href: '/', section: 'about' },
+    { name: 'Timeline', href: '/', section: 'timeline' },
+    { name: 'Team', href: '/', section: 'team' },
+    { name: 'Testimonials', href: '/', section: 'testimonials' },
+    { name: 'Contact Us', href: '/contact', section: null },
   ];
 
   const handleNavClick = (e: React.MouseEvent, item: typeof navigation[0]) => {
-    if (isHomePage && item.section) {
-      e.preventDefault();
-      const targetElement = document.getElementById(item.section);
-      if (targetElement) {
-        const headerOffset = item.name === 'Home' ? 0 : 100; // No offset for home section
-        const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+    // Handle Contact Us separately (goes to dedicated page)
+    if (item.name === 'Contact Us') {
+      setIsMenuOpen(false);
+      return; // Let the default link behavior handle this
+    }
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+    // For all other items with sections, navigate to home page and scroll to section
+    if (item.section) {
+      e.preventDefault();
+      
+      if (isHomePage) {
+        // If already on home page, just scroll to section
+        const targetElement = document.getElementById(item.section);
+        if (targetElement) {
+          const headerOffset = item.name === 'Home' ? 0 : 100;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      } else {
+        // If on another page, navigate to home page with hash
+        window.location.href = `/#${item.section}`;
       }
     }
     setIsMenuOpen(false);

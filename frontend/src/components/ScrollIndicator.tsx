@@ -14,7 +14,7 @@ const sections: Section[] = [
   { id: 'about', name: 'Events', color: '#75BF43' },
   { id: 'timeline', name: 'Timeline', color: '#75BF43' },
   { id: 'team', name: 'Team', color: '#75BF43' },
-  { id: 'contact', name: 'Contact Us', color: '#75BF43' },
+  { id: 'testimonials', name: 'Testimonials', color: '#75BF43' },
 ];
 
 export default function ScrollIndicator() {
@@ -44,18 +44,17 @@ export default function ScrollIndicator() {
           const eventsElement = document.getElementById('about'); // Statistics/Events section
           const timelineElement = document.getElementById('timeline');
           const teamElement = document.getElementById('team');
-          const contactElement = document.getElementById('contact');
+          const testimonialsElement = document.getElementById('testimonials');
 
-          if (homeElement && aboutUsElement && eventsElement && timelineElement && teamElement && contactElement) {
-            const homeTop = homeElement.offsetTop;
+          if (homeElement && aboutUsElement && eventsElement && timelineElement && teamElement) {
             const aboutUsTop = aboutUsElement.offsetTop;
             const eventsTop = eventsElement.offsetTop;
             const timelineTop = timelineElement.offsetTop;
             const teamTop = teamElement.offsetTop;
-            const contactTop = contactElement.offsetTop;
+            const testimonialsTop = testimonialsElement ? testimonialsElement.offsetTop : document.body.scrollHeight;
 
-            if (scrollPosition >= contactTop) {
-              currentSection = 'contact';
+            if (testimonialsElement && scrollPosition >= testimonialsTop) {
+              currentSection = 'testimonials';
             } else if (scrollPosition >= teamTop) {
               currentSection = 'team';
             } else if (scrollPosition >= timelineTop) {

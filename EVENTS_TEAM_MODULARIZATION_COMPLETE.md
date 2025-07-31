@@ -1,5 +1,6 @@
 # 📋 Component Architecture Documentation
 
+
 ## Events Page Components
 
 The events page has been modularized into reusable components for better maintainability:

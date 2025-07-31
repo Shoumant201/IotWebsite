@@ -2,8 +2,12 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { api } from '@/lib/api';
+import EventHero from '@/components/events/EventHero';
+import EventHighlights from '@/components/events/EventHighlights';
+import EventAgenda from '@/components/events/EventAgenda';
+import EventSidebar from '@/components/events/EventSidebar';
+import EventNotFound from '@/components/events/EventNotFound';
 
 interface Event {
     id: number;
@@ -20,8 +24,8 @@ interface Event {
     prerequisites: string[];
     highlights: string[];
     agenda: Array<{ time: string; activity: string }>;
-    attendees: string | undefined;
-    speakers: string | undefined;
+    attendees?: string;
+    speakers?: string;
     is_grand_event: boolean;
     is_active: boolean;
 }
@@ -295,10 +299,14 @@ function EventDetailsContent() {
                 setLoading(true);
                 // Try to fetch event by slug from API
                 const events = await api.events.getAll();
-                const foundEvent = events.find((e: Event) => e.slug === eventSlug);
+                const foundEvent = events.find((e: any) => e.slug === eventSlug);
 
                 if (foundEvent) {
-                    setEvent(foundEvent);
+                    setEvent({
+                        ...foundEvent,
+                        attendees: foundEvent.attendees || '50+ Participants',
+                        speakers: foundEvent.speakers || '5+ Expert Mentors'
+                    });
                 } else {
                     // Fallback to static data if not found in API
                     const fallbackEvent = fallbackEventsData[eventSlug as keyof typeof fallbackEventsData];
@@ -375,179 +383,26 @@ function EventDetailsContent() {
     }
 
     if (!event) {
-        return (
-            <div className="min-h-screen bg-white pt-20">
-                <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Event Not Found</h1>
-                    <p className="text-gray-600 mb-8">The event you're looking for doesn't exist or has been removed.</p>
-                    <a
-                        href="/"
-                        className="inline-flex items-center bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105"
-                    >
-                        Back to Home
-                    </a>
-                </div>
-            </div>
-        );
+        return <EventNotFound />;
     }
 
     return (
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
-            <section className="bg-gradient-to-br from-[#75BF43] to-[#5a9f33] text-white pt-32 pb-20">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <h1 className="text-4xl md:text-6xl font-bold mb-6">{event.title}</h1>
-                            <p className="text-xl md:text-2xl opacity-90 mb-8">{event.full_description}</p>
-
-                            {/* Event Details */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <div className="flex items-center mb-2">
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        <span className="font-semibold">Date</span>
-                                    </div>
-                                    <p className="text-sm opacity-90">{event.date}</p>
-                                </div>
-
-                                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <div className="flex items-center mb-2">
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span className="font-semibold">Time</span>
-                                    </div>
-                                    <p className="text-sm opacity-90">{event.time}</p>
-                                </div>
-
-                                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <div className="flex items-center mb-2">
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        </svg>
-                                        <span className="font-semibold">Location</span>
-                                    </div>
-                                    <p className="text-sm opacity-90">{event.location}</p>
-                                </div>
-
-                                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                                    <div className="flex items-center mb-2">
-                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
-                                        <span className="font-semibold">Level</span>
-                                    </div>
-                                    <p className="text-sm opacity-90">{event.level}</p>
-                                </div>
-                            </div>
-
-                            {/* Register Button */}
-                            <button className="bg-white text-[#75BF43] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 hover:shadow-xl hover:scale-105 min-h-[44px]">
-                                Register Now
-                            </button>
-                        </div>
-
-                        {/* Event Image */}
-                        <div className="relative">
-                            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                                <Image
-                                    src={event.image}
-                                    alt={event.title}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <EventHero event={event} />
 
             {/* Event Details Sections */}
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
                         {/* Main Content */}
                         <div className="lg:col-span-2 space-y-12">
-
-                            {/* Highlights */}
-                            <div>
-                                <h2 className="text-3xl font-bold text-gray-900 mb-6">Event Highlights</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {event.highlights.map((highlight, index) => (
-                                        <div key={index} className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
-                                            <div className="w-2 h-2 bg-[#75BF43] rounded-full mt-2 flex-shrink-0"></div>
-                                            <p className="text-gray-700">{highlight}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Agenda */}
-                            <div>
-                                <h2 className="text-3xl font-bold text-gray-900 mb-6">Event Agenda</h2>
-                                <div className="space-y-4">
-                                    {event.agenda.map((item, index) => (
-                                        <div key={index} className="flex items-start space-x-4 p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200">
-                                            <div className="bg-[#75BF43] text-white px-3 py-1 rounded-full text-sm font-semibold flex-shrink-0">
-                                                {item.time}
-                                            </div>
-                                            <p className="text-gray-700 font-medium">{item.activity}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                            <EventHighlights highlights={event.highlights} />
+                            <EventAgenda agenda={event.agenda} />
                         </div>
 
                         {/* Sidebar */}
-                        <div className="space-y-8">
-
-                            {/* Prerequisites */}
-                            <div className="bg-gray-50 rounded-2xl p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-4">Prerequisites</h3>
-                                <ul className="space-y-2">
-                                    {event.prerequisites.map((prereq, index) => (
-                                        <li key={index} className="flex items-start space-x-2">
-                                            <svg className="w-5 h-5 text-[#75BF43] mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                            <span className="text-gray-700 text-sm">{prereq}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-
-                            {/* Quick Info */}
-                            <div className="bg-[#75BF43]/5 border border-[#75BF43]/20 rounded-2xl p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-4">Quick Info</h3>
-                                <div className="space-y-3">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Duration:</span>
-                                        <span className="font-semibold text-gray-900">{event.duration}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Level:</span>
-                                        <span className="font-semibold text-gray-900">{event.level}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Format:</span>
-                                        <span className="font-semibold text-gray-900">In-Person</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Register CTA */}
-                            <div className="bg-gradient-to-br from-[#75BF43] to-[#5a9f33] rounded-2xl p-6 text-white text-center">
-                                <h3 className="text-xl font-bold mb-2">Ready to Join?</h3>
-                                <p className="text-sm opacity-90 mb-4">Secure your spot in this exciting event!</p>
-                                <button className="w-full bg-white text-[#75BF43] py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors duration-200 min-h-[44px]">
-                                    Register Now
-                                </button>
-                            </div>
-                        </div>
+                        <EventSidebar event={event} />
                     </div>
                 </div>
             </section>

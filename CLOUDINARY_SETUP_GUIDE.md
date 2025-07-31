@@ -1,26 +1,17 @@
 # 🖼️ Cloudinary Image Upload Setup Guide
 
-## ✅ What's Been Added
+## Overview
 
-I've implemented a complete image upload system with Cloudinary integration that replaces manual URL entry with drag-and-drop file uploads. Here's what's now available:
+This guide helps you set up Cloudinary integration for the IoT Innovation Hub image upload system. The system supports drag-and-drop uploads with real-time progress tracking and automatic CDN delivery.
 
-### 🚀 **New Image Upload Features**
+## Features
 
-1. **Drag & Drop Upload** - Users can upload images directly from their device
-2. **Cloudinary Integration** - Images are automatically uploaded to Cloudinary CDN
-3. **Real-time Preview** - See image preview before and after upload
-4. **Progress Indicators** - Visual upload progress with percentage
-5. **Automatic URL Saving** - Cloudinary URLs are automatically saved to database
-6. **Image Validation** - File type and size validation (5MB limit)
-
-### 📊 **Updated Admin Sections**
-
-All content management sections now have image upload capability:
-- ✅ **Heroes Management** - Background image upload
-- ✅ **Features Management** - Feature image upload  
-- ✅ **Events Management** - Event image upload
-- ✅ **Team Management** - Team member photo upload
-- ✅ **Testimonials Management** - Customer photo upload
+- **Drag & Drop Upload** - Direct file uploads from device
+- **CDN Integration** - Automatic Cloudinary CDN hosting
+- **Real-time Preview** - Image preview before and after upload
+- **Progress Tracking** - Visual upload progress indicators
+- **File Validation** - Type and size validation (5MB limit)
+- **Organized Storage** - Images organized by content type
 
 ## 🔧 **Setup Instructions**
 

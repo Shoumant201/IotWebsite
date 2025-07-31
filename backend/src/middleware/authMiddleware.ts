@@ -68,27 +68,52 @@ export const preventBannedUser = async (req: AuthenticatedRequest, res: Response
 
 // Role-based middleware to check if the user is an admin or super admin
 export const isAdminOrSuperAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-  // Check if req.user exists before accessing properties
   if (!req.user) {
-    console.error("User object is undefined in isAdminOrSuperAdmin middleware");
-    res.status(401).json({ message: "Authentication required" });
+    res.status(401).json({ 
+      success: false,
+      message: "Authentication required" 
+    });
     return;
   }
 
-  // Check if role property exists
   if (!req.user.role) {
-    console.error("Role property missing in user object:", req.user);
-    res.status(403).json({ message: "Access denied. Role information missing." });
+    res.status(403).json({ 
+      success: false,
+      message: "Access denied. Role information missing." 
+    });
     return;
   }
 
-  // Now check the role
   if (req.user.role === "admin" || req.user.role === "super_admin") {
     next();
     return;
   }
 
-  res.status(403).json({ message: "Access denied. Admin privileges required." });
+  res.status(403).json({ 
+    success: false,
+    message: "Access denied. Admin privileges required." 
+  });
+};
+
+// Middleware to check if user is super admin only
+export const isSuperAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+  if (!req.user) {
+    res.status(401).json({ 
+      success: false,
+      message: "Authentication required" 
+    });
+    return;
+  }
+
+  if (req.user.role !== "super_admin") {
+    res.status(403).json({ 
+      success: false,
+      message: "Access denied. Super admin privileges required." 
+    });
+    return;
+  }
+
+  next();
 };
 
 export const verifyPassword = async (req: AuthenticatedRequest, res: Response): Promise<void> => {

@@ -1,12 +1,13 @@
 import express from 'express';
-import { register, login} from '../controllers/authController.js';
+import { login, logout, verifyToken } from '../controllers/authController.js';
 
 const router = express.Router();
+
 /**
  * @swagger
- * /api/auth/register:
+ * /api/auth/login:
  *   post:
- *     summary: Register a new user
+ *     summary: Admin/Super Admin login
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -23,38 +24,41 @@ const router = express.Router();
  *               password:
  *                 type: string
  *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Registration error
- */
-
-router.post('/register', register);
-/**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: User login
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
  *       200:
  *         description: Login successful
  *       401:
  *         description: Invalid credentials
+ *       403:
+ *         description: Account banned
  */
-
 router.post('/login', login);
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+router.post('/logout', logout);
+
+/**
+ * @swagger
+ * /api/auth/verify-token:
+ *   get:
+ *     summary: Verify JWT token
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Token is valid
+ *       401:
+ *         description: Invalid token
+ */
+router.get('/verify-token', verifyToken);
 
 export default router;

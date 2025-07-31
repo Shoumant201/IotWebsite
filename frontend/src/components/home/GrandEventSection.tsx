@@ -1,32 +1,123 @@
-import Image from 'next/image';
+'use client';
 
-const grandEvent = {
-  id: "tech-connect",
-  title: "IoT Tech Connect",
-  subtitle: "The Ultimate IoT Conference Experience",
-  image: "/TechRace.png", // You can replace with actual image
-  description: "Join us for the most anticipated IoT event of the year! A 3-day summit bringing together industry leaders, innovators, and enthusiasts from around the globe.",
-  date: "December 15-17, 2024",
-  location: "Herald College Kathmandu - Main Auditorium",
-  attendees: "500+ Expected Attendees",
-  speakers: "50+ Industry Experts",
-  highlights: [
-    "Keynote speeches from global IoT leaders",
-    "Hands-on workshops and masterclasses",
-    "Startup pitch competition with $50,000 prize pool",
-    "Networking sessions with industry professionals",
-    "Latest IoT technology exhibitions",
-    "Career fair with top tech companies"
-  ],
-  stats: [
-    { number: "3", label: "Days of Innovation" },
-    { number: "50+", label: "Expert Speakers" },
-    { number: "500+", label: "Attendees" },
-    { number: "$50K", label: "Prize Pool" }
-  ]
-};
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { api, Event } from '@/lib/api';
 
 export default function GrandEventSection() {
+  const [grandEvent, setGrandEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchGrandEvent = async () => {
+      try {
+        const eventData = await api.events.getCurrentGrand();
+        setGrandEvent(eventData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error fetching grand event:', err);
+        setError('Failed to load grand event');
+        setLoading(false);
+        // Fallback to default event
+        setGrandEvent({
+          id: 1,
+          title: "IoT Tech Connect",
+          slug: "iot-tech-connect",
+          description: "The Ultimate IoT Conference Experience",
+          full_description: "Join us for the most anticipated IoT event of the year! A 3-day summit bringing together industry leaders, innovators, and enthusiasts from around the globe.",
+          image: "/TechRace.png",
+          date: "December 15-17, 2024",
+          time: "Full 3 Days",
+          location: "Herald College Kathmandu - Main Auditorium",
+          duration: "3 Days",
+          level: "All Levels" as const,
+          prerequisites: [],
+          highlights: [
+            "Keynote speeches from global IoT leaders",
+            "Hands-on workshops and masterclasses",
+            "Startup pitch competition with $50,000 prize pool",
+            "Networking sessions with industry professionals",
+            "Latest IoT technology exhibitions",
+            "Career fair with top tech companies"
+          ],
+          agenda: [],
+          attendees: "500+ Expected Attendees",
+          speakers: "50+ Industry Experts",
+          is_grand_event: true,
+          is_active: true,
+          order_index: 1,
+          created_at: "",
+          updated_at: ""
+        });
+      }
+    };
+
+    fetchGrandEvent();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-5/6 max-w-7xl">
+            <div className="text-center mb-8">
+              <p className="text-lg mb-4 text-gray-600 bg-gray-100 text-[12px] inline-block px-4 py-2 rounded-full">
+                Grand Event
+              </p>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured Event</h2>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-[calc(400px*3+48px)] rounded-3xl border border-gray-200 flex flex-col justify-center p-8 shadow-lg h-96">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#75BF43] mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading grand event...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !grandEvent) {
+    return (
+      <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-5/6 max-w-7xl">
+            <div className="text-center mb-8">
+              <p className="text-lg mb-4 text-gray-600 bg-gray-100 text-[12px] inline-block px-4 py-2 rounded-full">
+                Grand Event
+              </p>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4">Featured Event</h2>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-[calc(400px*3+48px)] rounded-3xl border border-gray-200 flex flex-col justify-center p-8 shadow-lg h-96">
+                <div className="text-center">
+                  <p className="text-red-600 mb-4">{error || 'No grand event available'}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="bg-[#75BF43] text-white px-4 py-2 rounded-lg hover:bg-[#5a9f33]"
+                  >
+                    Retry
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Generate stats from event data
+  const stats = [
+    { number: grandEvent.duration, label: "Duration" },
+    { number: grandEvent.speakers || "TBD", label: "Expert Speakers" },
+    { number: grandEvent.attendees || "TBD", label: "Attendees" },
+    { number: grandEvent.level, label: "Level" }
+  ];
   return (
     <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
       <div className="w-full flex justify-center items-center">
@@ -68,7 +159,7 @@ export default function GrandEventSection() {
               <div className="absolute top-6 left-6 right-6 z-20">
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-3 shadow-lg border border-white/30">
                   <h3 className="text-xl md:text-2xl font-bold text-white text-center">{grandEvent.title}</h3>
-                  <p className="text-sm md:text-base text-white/90 text-center mt-1">{grandEvent.subtitle}</p>
+                  <p className="text-sm md:text-base text-white/90 text-center mt-1">{grandEvent.description}</p>
                 </div>
               </div>
 
@@ -83,7 +174,7 @@ export default function GrandEventSection() {
 
                 {/* Event Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 w-full max-w-2xl">
-                  {grandEvent.stats.map((stat, index) => (
+                  {stats.map((stat, index) => (
                     <div key={index} className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
                       <div className="text-lg md:text-xl font-bold">{stat.number}</div>
                       <div className="text-xs md:text-sm opacity-90">{stat.label}</div>
@@ -121,7 +212,7 @@ export default function GrandEventSection() {
                     style={{ touchAction: 'manipulation' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.location.href = `/events?event=${grandEvent.id}`;
+                      window.location.href = `/events?event=${grandEvent.slug}`;
                     }}
                   >
                     Register Now
@@ -131,7 +222,7 @@ export default function GrandEventSection() {
                     style={{ touchAction: 'manipulation' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      window.location.href = `/events?event=${grandEvent.id}`;
+                      window.location.href = `/events?event=${grandEvent.slug}`;
                     }}
                   >
                     Learn More

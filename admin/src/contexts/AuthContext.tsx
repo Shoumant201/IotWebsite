@@ -13,7 +13,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; isBanned?: boolean }>;
   logout: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string; isBanned?: boolean }> => {
     setIsLoading(true);
     setError(null);
     
@@ -67,16 +67,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         apiService.setToken(response.token);
         apiService.setUser(response.user);
         setUser(response.user);
-        return true;
+        return { success: true };
       } else {
-        setError(response.message || 'Login failed');
-        return false;
+        const errorMessage = response.message || 'Login failed';
+        setError(errorMessage);
+        
+        // Check if it's a banned user error
+        const isBanned = errorMessage.toLowerCase().includes('banned');
+        
+        return { 
+          success: false, 
+          error: errorMessage,
+          isBanned 
+        };
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Login failed';
+    } catch (error: any) {
+      let errorMessage = 'Login failed';
+      let isBanned = false;
+      
+      // Handle API error responses
+      if (error.statusCode === 403 || (error.message && error.message.toLowerCase().includes('banned'))) {
+        errorMessage = 'Your account has been banned. Please contact an administrator.';
+        isBanned = true;
+      } else if (error.statusCode === 401) {
+        errorMessage = 'Invalid email or password. Please try again.';
+      } else if (error.statusCode === 500) {
+        errorMessage = 'Server error. Please try again later.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setError(errorMessage);
       console.error('Login error:', error);
-      return false;
+      
+      return { 
+        success: false, 
+        error: errorMessage,
+        isBanned 
+      };
     } finally {
       setIsLoading(false);
     }

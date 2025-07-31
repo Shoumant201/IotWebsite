@@ -3,18 +3,20 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login, user, isLoading, error } = useAuth();
   const router = useRouter();
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [user, router]);
 
@@ -23,15 +25,26 @@ export default function LoginPage() {
     setLocalError('');
 
     if (!email || !password) {
-      setLocalError('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
 
-    const success = await login(email, password);
-    if (success) {
-      router.push('/');
+    const result = await login(email, password);
+    
+    if (result.success) {
+      toast.success('Login successful! Redirecting...');
+      router.push('/dashboard');
+    } else {
+      // Handle different types of errors with appropriate toast styles
+      if (result.isBanned) {
+        toast.error(result.error || 'Your account has been banned', {
+          description: 'Please contact an administrator for assistance.',
+          duration: 6000,
+        });
+      } else {
+        toast.error(result.error || 'Login failed');
+      }
     }
-    // Error handling is now done in the AuthContext
   };
 
   const displayError = error || localError;
@@ -72,39 +85,43 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 disabled={isLoading}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center z-20"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
+              >
+                {showPassword ? (
+                  <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
 
-          {displayError && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-red-800">{displayError}</p>
-                </div>
-              </div>
-            </div>
-          )}
+
 
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
             <div className="flex">
@@ -115,9 +132,9 @@ export default function LoginPage() {
               </div>
               <div className="ml-3">
                 <p className="text-sm text-blue-800">
-                  <strong>Demo Credentials:</strong><br />
-                  Email: admin@iot.com<br />
-                  Password: admin123
+                  <strong>Default Super Admin:</strong><br />
+                  Email: superadmin@admin.com<br />
+                  Password: SuperAdmin123!
                 </p>
               </div>
             </div>

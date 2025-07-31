@@ -1,12 +1,30 @@
 import express from 'express';
-import authRoutes from './auth/index.js';
-import userRoutes from './users/index.js';
+import authRoutes from './authRoutes.js';
+import adminRoutes from './adminRoutes.js';
+import heroRoutes from './heroRoutes.js';
+import featureRoutes from './featureRoutes.js';
+import eventRoutes from './eventRoutes.js';
+import timelineRoutes from './timelineRoutes.js';
+import teamRoutes from './teamRoutes.js';
+import testimonialRoutes from './testimonialRoutes.js';
+import uploadRoutes from './uploadRoutes.js';
 
 const router = express.Router();
 
-// API Routes
+// Authentication & Admin Routes
 router.use('/auth', authRoutes);
-router.use('/users', userRoutes);
+router.use('/admin', adminRoutes);
+
+// Content Management Routes
+router.use('/heroes', heroRoutes);
+router.use('/features', featureRoutes);
+router.use('/events', eventRoutes);
+router.use('/timeline', timelineRoutes);
+router.use('/team', teamRoutes);
+router.use('/testimonials', testimonialRoutes);
+
+// Upload Routes
+router.use('/upload', uploadRoutes);
 
 // Health check
 router.get('/health', (req, res) => {

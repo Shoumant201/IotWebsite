@@ -1,17 +1,55 @@
-import StatisticsClient from './StatisticsClient'
+import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
 
-import { useEffect } from 'react';
-
-const statistics = [
-  { target: 50, label: "Members" },
-  { target: 20, label: "IoT Projects" },
-  { target: 15, label: "Events" },
-  { target: 3, label: "Years" },
-  { target: 25, label: "Testimonials" },
-  { target: 100, label: "Successful Deployments" },
-];
+interface Statistics {
+  target: number;
+  label: string;
+}
 
 export default function StatisticsSection() {
+  const [statistics, setStatistics] = useState<Statistics[]>([
+    { target: 50, label: "Members" },
+    { target: 20, label: "IoT Projects" },
+    { target: 15, label: "Events" },
+    { target: 3, label: "Years" },
+    { target: 25, label: "Testimonials" },
+    { target: 100, label: "Successful Deployments" },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        setLoading(true);
+        // Fetch data from all APIs to calculate real statistics
+        const [events, team, testimonials] = await Promise.all([
+          api.events.getAll(),
+          api.team.getAll(),
+          api.testimonials.getAll()
+        ]);
+
+        // Calculate dynamic statistics
+        const dynamicStats = [
+          { target: team.length || 50, label: "Members" },
+          { target: 20, label: "IoT Projects" }, // Keep static for now
+          { target: events.length || 15, label: "Events" },
+          { target: 3, label: "Years" }, // Keep static
+          { target: testimonials.length || 25, label: "Testimonials" },
+          { target: 100, label: "Successful Deployments" }, // Keep static
+        ];
+
+        setStatistics(dynamicStats);
+      } catch (err) {
+        console.error('Error fetching statistics:', err);
+        // Keep default statistics on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStatistics();
+  }, []);
+
   useEffect(() => {
     // Counter animation with delay to ensure DOM is ready
     const initCounters = () => {

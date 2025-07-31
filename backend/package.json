@@ -10,6 +10,11 @@
     "build": "tsc",
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
+    "create-super-admin": "node --loader ts-node/esm src/scripts/createSuperAdmin.ts",
+    "setup-db": "node --loader ts-node/esm src/scripts/setupDatabase.ts",
+    "create-tables": "node --loader ts-node/esm src/scripts/createTables.ts",
+    "seed-data": "node --loader ts-node/esm src/scripts/completeSeedData.ts",
+    "seed-sample": "node --loader ts-node/esm src/scripts/seedSampleData.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,11 +22,14 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@types/multer": "^2.0.0",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
     "pg": "^8.16.3"
   },
   "devDependencies": {

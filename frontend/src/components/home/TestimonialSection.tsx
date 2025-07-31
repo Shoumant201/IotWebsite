@@ -1,56 +1,74 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-
-const testimonials = [
-    {
-        name: "Rajesh Kumar",
-        role: "Software Engineer",
-        company: "Tech Solutions Nepal",
-        image: "/testimonial1.jpg",
-        content: "The IoT Innovators program completely transformed my understanding of connected devices. The hands-on approach and expert mentorship helped me land my dream job in IoT development."
-    },
-    {
-        name: "Priya Sharma",
-        role: "IoT Developer",
-        company: "Smart Systems Pvt Ltd",
-        image: "/testimonial2.jpg",
-        content: "Amazing community and learning experience! The 6-month program provided practical skills that I use daily in my current role. Highly recommend to anyone interested in IoT."
-    },
-    {
-        name: "Amit Thapa",
-        role: "Hardware Engineer",
-        company: "Innovation Labs",
-        image: "/testimonial3.jpg",
-        content: "The program's focus on real-world projects and industry connections made all the difference. I'm now working on cutting-edge IoT solutions thanks to this foundation."
-    },
-    {
-        name: "Sita Poudel",
-        role: "Product Manager",
-        company: "Digital Nepal",
-        image: "/testimonial4.jpg",
-        content: "Excellent program structure and mentorship. The knowledge I gained here has been invaluable in my career progression in the tech industry."
-    },
-    {
-        name: "Bikash Shrestha",
-        role: "Embedded Systems Developer",
-        company: "Future Tech",
-        image: "/testimonial5.jpg",
-        content: "The IoT Innovators Foundation provided me with both technical skills and industry insights. The networking opportunities alone were worth the entire program."
-    },
-    {
-        name: "Anita Gurung",
-        role: "Tech Entrepreneur",
-        company: "StartUp Nepal",
-        image: "/testimonial6.jpg",
-        content: "This program gave me the confidence and skills to start my own IoT company. The mentorship and community support continue to be invaluable."
-    }
-];
+import { api, Testimonial } from '@/lib/api';
 
 export default function TestimonialSection() {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            try {
+                const testimonialData = await api.testimonials.getAll();
+                setTestimonials(testimonialData);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching testimonials:', err);
+                setError('Failed to load testimonials');
+                setLoading(false);
+                
+                // Fallback to default testimonials
+                setTestimonials([
+                    {
+                        id: 1,
+                        name: "Rajesh Kumar",
+                        role: "Software Engineer",
+                        company: "Tech Solutions Nepal",
+                        image: "/testimonial1.jpg",
+                        content: "The IoT Innovators program completely transformed my understanding of connected devices. The hands-on approach and expert mentorship helped me land my dream job in IoT development.",
+                        rating: 5,
+                        is_active: true,
+                        order_index: 1,
+                        created_at: "",
+                        updated_at: ""
+                    },
+                    {
+                        id: 2,
+                        name: "Priya Sharma",
+                        role: "IoT Developer",
+                        company: "Smart Systems Pvt Ltd",
+                        image: "/testimonial2.jpg",
+                        content: "Amazing community and learning experience! The 6-month program provided practical skills that I use daily in my current role. Highly recommend to anyone interested in IoT.",
+                        rating: 5,
+                        is_active: true,
+                        order_index: 2,
+                        created_at: "",
+                        updated_at: ""
+                    },
+                    {
+                        id: 3,
+                        name: "Amit Thapa",
+                        role: "Hardware Engineer",
+                        company: "Innovation Labs",
+                        image: "/testimonial3.jpg",
+                        content: "The program's focus on real-world projects and industry connections made all the difference. I'm now working on cutting-edge IoT solutions thanks to this foundation.",
+                        rating: 5,
+                        is_active: true,
+                        order_index: 3,
+                        created_at: "",
+                        updated_at: ""
+                    }
+                ]);
+            }
+        };
+
+        fetchTestimonials();
+    }, []);
 
     const scrollToTestimonial = (index: number) => {
         const scrollContainer = scrollRef.current;
@@ -139,6 +157,26 @@ export default function TestimonialSection() {
         };
     }, [isPaused]);
 
+    if (loading) {
+        return (
+            <section id="testimonials" className="w-full relative flex flex-col items-center bg-gradient-to-br from-gray-50 to-white text-gray-900 py-20">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <p className="text-lg mb-4 text-gray-600 bg-gray-100 text-[12px] inline-block px-4 py-2 rounded-full">
+                            Testimonials
+                        </p>
+                        <h2 className="text-3xl md:text-6xl font-bold mb-4">What Our Students Say</h2>
+                        <p className="text-lg text-gray-600">Hear from our successful graduates and their IoT journey</p>
+                    </div>
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#75BF43] mx-auto mb-4"></div>
+                        <p className="text-gray-600">Loading testimonials...</p>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
     return (
         <section id="testimonials" className="w-full relative flex flex-col items-center bg-gradient-to-br from-gray-50 to-white text-gray-900 py-20" data-aos="fade-up">
             <div className="max-w-7xl mx-auto px-4">
@@ -154,6 +192,11 @@ export default function TestimonialSection() {
                     <p className="text-lg text-gray-600" data-aos="fade-up" data-aos-delay="300">
                         Hear from our successful graduates and their IoT journey
                     </p>
+                    {error && (
+                        <div className="mt-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+                            <p className="text-red-600 text-sm">{error}</p>
+                        </div>
+                    )}
                 </div>
 
                 {/* Desktop Auto-scrolling Testimonials Container */}

@@ -1,63 +1,103 @@
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { api } from '@/lib/api';
 
-const events = [
-  {
-    id: "face-in-focus",
-    image: "/FaceinFocus.png",
-    title: "Face in Focus",
-    description: "Hands-on learning experience"
-  },
-  {
-    id: "iot-tech-hunt",
-    image: "/IOT_Tech_Hunt.png",
-    title: "IoT Tech Hunt",
-    description: "Exploring the future of IoT"
-  },
-  {
-    id: "iot-open-doors",
-    image: "/IOTOPENDOORS.png",
-    title: "IoT Open Doors",
-    description: "48-hour innovation challenge"
-  },
-  {
-    id: "talent-acquisition-techathon",
-    image: "/Talent_Acquisition_Techathon.png",
-    title: "Talent Acquisition Techathon",
-    description: "Connect with IoT professionals"
-  },
-  {
-    id: "tech-connect",
-    image: "/Talent_Acquisition_Techathon.png",
-    title: "Tech Connect",
-    description: "Connect with IoT professionals"
-  },
-  {
-    id: "3d-buzz",
-    image: "/3D Buzz.png",
-    title: "3D Buzz",
-    description: "Demonstrating IoT innovations"
-  },
-  {
-    id: "short-circuit",
-    image: "/Shot Circuit.png",
-    title: "Short Circuit",
-    description: "Learn to build IoT solutions"
-  },
-  {
-    id: "echo-bot",
-    image: "/Echo Bot.png",
-    title: "Echo Bot",
-    description: "Learn to build IoT solutions"
-  },
-  {
-    id: "tech-race",
-    image: "/TechRace.png",
-    title: "Tech Race",
-    description: "Learn to build IoT solutions"
-  }
-];
+interface Event {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  image: string;
+  is_active: boolean;
+  is_grand_event: boolean;
+}
 
 export default function EventsGrid() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const eventsData = await api.events.getAll();
+        // Filter only active, non-grand events and limit to 9 for the grid
+        const activeEvents = eventsData.filter((event: Event) => event.is_active && !event.is_grand_event).slice(0, 9);
+        setEvents(activeEvents);
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError('Failed to load events');
+        // Fallback to static data if API fails
+        setEvents([
+          {
+            id: 1,
+            title: "Face in Focus",
+            slug: "face-in-focus",
+            description: "Hands-on learning experience",
+            image: "/FaceinFocus.png",
+            is_active: true,
+            is_grand_event: false
+          },
+          {
+            id: 2,
+            title: "IoT Tech Hunt",
+            slug: "iot-tech-hunt",
+            description: "Exploring the future of IoT",
+            image: "/IOT_Tech_Hunt.png",
+            is_active: true,
+            is_grand_event: false
+          },
+          {
+            id: 3,
+            title: "IoT Open Doors",
+            slug: "iot-open-doors",
+            description: "48-hour innovation challenge",
+            image: "/IOTOPENDOORS.png",
+            is_active: true,
+            is_grand_event: false
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
+        <div className="w-full flex justify-center items-center">
+          <div className="w-5/6 grid grid-cols-1 lg:grid-cols-3 grid-rows-2 gap-6 mt-8 items-center justify-items-center max-w-7xl">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="aspect-square max-w-[400px] w-full bg-gray-200 rounded-3xl animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-[#75BF43] text-white px-4 py-2 rounded-lg hover:bg-[#5a9f33]"
+          >
+            Retry
+          </button>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="w-full relative flex flex-col items-center bg-white text-gray-900 py-8">
       <div className="w-full flex justify-center items-center">
@@ -92,7 +132,7 @@ export default function EventsGrid() {
                   className="bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] text-white px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-300 min-h-[44px] flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation();
-                    window.location.href = `/events?event=${event.id}`;
+                    window.location.href = `/events?event=${event.slug}`;
                   }}
                 >
                   View Details
@@ -112,7 +152,7 @@ export default function EventsGrid() {
                   style={{ touchAction: 'manipulation' }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    window.location.href = `/events?event=${event.id}`;
+                    window.location.href = `/events?event=${event.slug}`;
                   }}
                 >
                   View Details

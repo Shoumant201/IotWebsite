@@ -24,7 +24,7 @@ const leadershipTeam = [
 const steeringLeaders = [
   {
     name: "Bidhan Sapkota",
-    role: "Executive Lead",
+    role: "Logistic Lead",
     department: "Engineering Department",
     image: "/team/Bidhan.jpg",
     description: "Overseeing technical architecture and IoT system implementations."
@@ -59,7 +59,7 @@ const steeringLeaders = [
   },
   {
     name: "Narendra Ghimire",
-    role: "Documentation Head",
+    role: "Documentation Lead",
     department: "Innovation Lab",
     image: "/team/innovation-head.jpg",
     description: "Driving innovation initiatives and emerging technology adoption."

@@ -12,6 +12,7 @@ import FounderProfile from "@/components/home/FounderProfile";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import StatisticsSection from "@/components/home/StatisticsSection";
 import EventsGrid from "@/components/home/EventsGrid";
+import GrandEventSection from "@/components/home/GrandEventSection";
 import TimelineSection from "@/components/home/TimelineSection";
 import TeamSection from "@/components/home/TeamSection";
 import TestimonialSection from "@/components/home/TestimonialSection";
@@ -117,6 +118,9 @@ export default function Home() {
 
         {/* Events Grid */}
         <EventsGrid />
+
+        {/* Grand Event Section */}
+        <GrandEventSection />
 
         {/* Timeline Section */}
         <TimelineSection />

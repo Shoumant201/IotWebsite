@@ -2,43 +2,57 @@ import Image from 'next/image';
 
 const events = [
   {
+    id: "face-in-focus",
     image: "/FaceinFocus.png",
     title: "Face in Focus",
     description: "Hands-on learning experience"
   },
   {
+    id: "iot-tech-hunt",
     image: "/IOT_Tech_Hunt.png",
     title: "IoT Tech Hunt",
     description: "Exploring the future of IoT"
   },
   {
+    id: "iot-open-doors",
     image: "/IOTOPENDOORS.png",
     title: "IoT Open Doors",
     description: "48-hour innovation challenge"
   },
   {
+    id: "talent-acquisition-techathon",
     image: "/Talent_Acquisition_Techathon.png",
     title: "Talent Acquisition Techathon",
     description: "Connect with IoT professionals"
   },
   {
+    id: "tech-connect",
     image: "/Talent_Acquisition_Techathon.png",
     title: "Tech Connect",
     description: "Connect with IoT professionals"
   },
   {
+    id: "3d-buzz",
     image: "/3D Buzz.png",
     title: "3D Buzz",
     description: "Demonstrating IoT innovations"
   },
   {
+    id: "short-circuit",
     image: "/Shot Circuit.png",
     title: "Short Circuit",
     description: "Learn to build IoT solutions"
   },
   {
+    id: "echo-bot",
     image: "/Echo Bot.png",
     title: "Echo Bot",
+    description: "Learn to build IoT solutions"
+  },
+  {
+    id: "tech-race",
+    image: "/TechRace.png",
+    title: "Tech Race",
     description: "Learn to build IoT solutions"
   }
 ];
@@ -59,7 +73,7 @@ export default function EventsGrid() {
                 alt={event.title}
                 src={event.image}
                 fill
-                className="object-cover z-10 rounded-3xl group-hover:scale-110 group-hover:rotate-1 transition-all duration-700"
+                className="object-cover z-10 rounded-3xl"
               />
               {/* Event Name - Always Visible */}
               <div className="absolute top-4 left-4 right-4 z-20">
@@ -78,7 +92,7 @@ export default function EventsGrid() {
                   className="bg-gradient-to-r from-[#75BF43] to-[#5a9f33] hover:from-[#5a9f33] hover:to-[#4a8a2a] text-white px-4 py-2 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:scale-105 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-300 min-h-[44px] flex items-center justify-center"
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log(`View details for ${event.title}`);
+                    window.location.href = `/events?event=${event.id}`;
                   }}
                 >
                   View Details
@@ -91,14 +105,14 @@ export default function EventsGrid() {
               {/* Mobile Always-Visible Bottom Section */}
               <div className="md:hidden absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 z-20 text-white">
                 <p className="text-xs opacity-90 mb-3 text-center">{event.description}</p>
-                
+
                 {/* Mobile View Details Button - Always Visible */}
-                <button 
+                <button
                   className="w-full bg-gradient-to-r from-[#75BF43] to-[#5a9f33] active:from-[#5a9f33] active:to-[#4a8a2a] text-white px-4 py-3 rounded-lg font-semibold text-sm transition-all duration-200 active:scale-95 min-h-[44px] flex items-center justify-center shadow-lg"
                   style={{ touchAction: 'manipulation' }}
                   onClick={(e) => {
                     e.stopPropagation();
-                    console.log(`View details for ${event.title}`);
+                    window.location.href = `/events?event=${event.id}`;
                   }}
                 >
                   View Details

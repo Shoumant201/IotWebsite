@@ -10,21 +10,24 @@ export const initializeDB = (): PoolType => {
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     port: process.env.DB_PORT,
-    hasConnectionString: !!process.env.DATABASE_URL
+    hasConnectionString: !!process.env.DATABASE_URL,
+    nodeEnv: process.env.NODE_ENV
   });
 
   // Use DATABASE_URL for production (Railway) or individual params for development
   if (process.env.DATABASE_URL) {
+    console.log('Using DATABASE_URL for connection');
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
     });
   } else {
+    console.log('Using individual database parameters');
     pool = new Pool({
-      user: process.env.DB_USER,
-      host: process.env.DB_HOST,
-      database: process.env.DB_NAME,
-      password: process.env.DB_PASSWORD,
+      user: process.env.DB_USER || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      database: process.env.DB_NAME || 'iot_innovation_hub',
+      password: process.env.DB_PASSWORD || 'password',
       port: parseInt(process.env.DB_PORT || '5432'),
     });
   }

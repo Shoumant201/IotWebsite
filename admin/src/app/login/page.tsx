@@ -133,7 +133,7 @@ export default function LoginPage() {
               <div className="ml-3">
                 <p className="text-sm text-blue-800">
                   <strong>Default Super Admin:</strong><br />
-                  Email: superadmin@admin.com<br />
+                  Email: admin@iot-hub.com<br />
                   Password: SuperAdmin123!
                 </p>
               </div>

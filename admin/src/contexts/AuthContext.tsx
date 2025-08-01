@@ -81,22 +81,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           isBanned 
         };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      console.error('🚨 AuthContext login error:', error);
+      
       let errorMessage = 'Login failed';
       let isBanned = false;
       
-      // Handle API error responses
-      if (error.statusCode === 403 || (error.message && error.message.toLowerCase().includes('banned'))) {
-        errorMessage = 'Your account has been banned. Please contact an administrator.';
-        isBanned = true;
-      } else if (error.statusCode === 401) {
-        errorMessage = 'Invalid email or password. Please try again.';
-      } else if (error.statusCode === 500) {
-        errorMessage = 'Server error. Please try again later.';
-      } else if (error.message) {
-        errorMessage = error.message;
+      // Handle different types of errors
+      if (error && typeof error === 'object') {
+        const err = error as any;
+        
+        if (err.statusCode === 403 || (err.message && err.message.toLowerCase().includes('banned'))) {
+          errorMessage = 'Your account has been banned. Please contact an administrator.';
+          isBanned = true;
+        } else if (err.statusCode === 401) {
+          errorMessage = 'Invalid email or password. Please try again.';
+        } else if (err.statusCode === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        } else if (err.message) {
+          errorMessage = err.message;
+        } else if (err.code === 'NETWORK_ERROR') {
+          errorMessage = 'Network error - please check your connection and try again.';
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error;
       }
       
+      console.error('🔍 Final error message:', errorMessage);
       setError(errorMessage);
       console.error('Login error:', error);
       

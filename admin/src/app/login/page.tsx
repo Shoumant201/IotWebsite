@@ -24,26 +24,48 @@ export default function LoginPage() {
     e.preventDefault();
     setLocalError('');
 
+    console.log('🔍 Login attempt:', { email, password: '***' });
+
     if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    const result = await login(email, password);
-    
-    if (result.success) {
-      toast.success('Login successful! Redirecting...');
-      router.push('/dashboard');
-    } else {
-      // Handle different types of errors with appropriate toast styles
-      if (result.isBanned) {
-        toast.error(result.error || 'Your account has been banned', {
-          description: 'Please contact an administrator for assistance.',
-          duration: 6000,
-        });
+    try {
+      console.log('🚀 Calling login function...');
+      const result = await login(email, password);
+      
+      console.log('📋 Login result:', result);
+      
+      if (result.success) {
+        toast.success('Login successful! Redirecting...');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 1000); // Add delay to see success message
       } else {
-        toast.error(result.error || 'Login failed');
+        console.error('❌ Login failed:', result);
+        
+        // Handle different types of errors with appropriate toast styles
+        if (result.isBanned) {
+          toast.error(result.error || 'Your account has been banned', {
+            description: 'Please contact an administrator for assistance.',
+            duration: 6000,
+          });
+        } else {
+          const errorMessage = result.error || result.message || 'Login failed - please check your credentials';
+          toast.error(errorMessage, {
+            duration: 5000,
+          });
+          setLocalError(errorMessage);
+        }
       }
+    } catch (error) {
+      console.error('🚨 Login exception:', error);
+      const errorMessage = 'Login failed - network or server error';
+      toast.error(errorMessage, {
+        duration: 5000,
+      });
+      setLocalError(errorMessage);
     }
   };
 
@@ -133,8 +155,8 @@ export default function LoginPage() {
               <div className="ml-3">
                 <p className="text-sm text-blue-800">
                   <strong>Default Super Admin:</strong><br />
-                  Email: admin@iot-hub.com<br />
-                  Password: SuperAdmin123!
+                  Email: admin@iot.com<br />
+                  Password: Admin@123
                 </p>
               </div>
             </div>

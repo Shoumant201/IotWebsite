@@ -1,13 +1,18 @@
 {
-  "name": "iotproject",
+  "name": "iot-innovation-hub",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "IoT Innovation Hub - Complete Content Management System",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../admin && npm install"
   },
-  "keywords": [],
+  "keywords": ["iot", "innovation", "hub", "cms"],
   "author": "",
-  "license": "ISC",
-  "type": "commonjs"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
 }

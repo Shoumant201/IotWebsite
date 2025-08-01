@@ -9,16 +9,25 @@ export const initializeDB = (): PoolType => {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
-    port: process.env.DB_PORT
+    port: process.env.DB_PORT,
+    hasConnectionString: !!process.env.DATABASE_URL
   });
 
-  pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT || '5432'),
-  });
+  // Use DATABASE_URL for production (Railway) or individual params for development
+  if (process.env.DATABASE_URL) {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    });
+  } else {
+    pool = new Pool({
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: parseInt(process.env.DB_PORT || '5432'),
+    });
+  }
   
   return pool;
 };

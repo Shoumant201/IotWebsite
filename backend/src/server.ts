@@ -8,33 +8,40 @@ import apiRoutes from './routes/index.js';
 
 const app = express();
 
-// CORS Configuration - Allow multiple origins
+// CORS Configuration - Allow all Vercel domains temporarily
 const corsOptions = {
-  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      'http://localhost:3000',  // Frontend
-      'http://localhost:3001',  // Admin Panel
-      process.env.FRONTEND_URL || 'http://localhost:3000',
-      process.env.ADMIN_PANEL_URL || 'http://localhost:3001'
-    ];
-    
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.log(`🚫 CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'), false);
-    }
-  },
+  origin: true, // Allow all origins temporarily
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  optionsSuccessStatus: 200
 };
 
+// Log environment variables for debugging
+console.log('🔍 Environment variables:', {
+  FRONTEND_URL: process.env.FRONTEND_URL,
+  ADMIN_PANEL_URL: process.env.ADMIN_PANEL_URL,
+  NODE_ENV: process.env.NODE_ENV
+});
+
 app.use(cors(corsOptions));
+
+// Add explicit CORS headers as backup
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+    return;
+  }
+  
+  next();
+});
+
 app.use(express.json());
 
 

@@ -3,7 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import { initializeDB, createTables, testDBConnection } from './config/db.js';
+import { initializeDB, createTables, testDBConnection, getPool } from './config/db.js';
 import apiRoutes from './routes/index.js';
 
 const app = express();
@@ -47,6 +47,47 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
+// Auto-create super admin function
+const createSuperAdminIfNotExists = async () => {
+  try {
+    const pool = getPool();
+    
+    const email = process.env.SUPER_ADMIN_EMAIL || 'admin@iot-hub.com';
+    const password = process.env.SUPER_ADMIN_PASSWORD || 'AdminPassword123!';
+    const name = process.env.SUPER_ADMIN_NAME || 'Super Admin';
+    
+    // Check if super admin already exists
+    const existingAdmin = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+    
+    if (existingAdmin.rows.length > 0) {
+      console.log('✅ Super admin already exists');
+      return;
+    }
+    
+    // Import bcrypt dynamically
+    const bcrypt = await import('bcryptjs');
+    const hashedPassword = await bcrypt.default.hash(password, 12);
+    
+    // Create super admin user
+    await pool.query(
+      `INSERT INTO users (name, email, password, role, is_banned, created_at) 
+       VALUES ($1, $2, $3, $4, $5, NOW())`,
+      [name, email, hashedPassword, 'super_admin', false]
+    );
+    
+    console.log('🎉 Super admin created successfully!');
+    console.log(`📧 Email: ${email}`);
+    console.log(`🔑 Password: ${password}`);
+    console.log('🔗 Admin Panel: https://iot-website-admin.vercel.app');
+    
+  } catch (error) {
+    console.error('⚠️ Error creating super admin:', error);
+  }
+};
+
 // Health check endpoint with database test
 app.get('/api/health', async (req, res) => {
   try {
@@ -85,6 +126,9 @@ app.use('/api', apiRoutes);
   initializeDB();
   await testDBConnection();
   await createTables();
+  
+  // Auto-create super admin after tables are created
+  await createSuperAdminIfNotExists();
 
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);

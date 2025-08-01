@@ -195,7 +195,7 @@ export default function TestimonialsManagement() {
                   {renderStars(testimonial.rating)}
                   <span className="ml-2 text-sm text-gray-600">({testimonial.rating}/5)</span>
                 </div>
-                <p className="text-sm text-gray-700 line-clamp-3 mb-4">"{testimonial.content}"</p>
+                <p className="text-sm text-gray-700 line-clamp-3 mb-4">&ldquo;{testimonial.content}&rdquo;</p>
                 <div className="flex justify-between items-center">
                   <button
                     onClick={() => handleToggle(testimonial.id)}

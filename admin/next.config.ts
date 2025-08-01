@@ -11,13 +11,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     domains: ['res.cloudinary.com'],
-    unoptimized: true, // Required for static export
   },
-  // Enable static export for Netlify
-  output: 'export',
-  trailingSlash: true,
-  // Disable image optimization for static export
-  distDir: 'out',
 }
 
 export default nextConfig
